@@ -28,20 +28,31 @@ namespace Vidly.Controllers
             return View(viewModel);
         }
 
+        public ViewResult Index()
+        {
+            var customers = GetCustomers();
+
+            return View(customers);
+        }
+
         //[Route("customers/details/{id}")]
         public ActionResult Details(int id)
         {
-            var customers = new List<Customer>
+            var customer = GetCustomers().SingleOrDefault(c => c.Id == id);
+
+            if (customer == null)
+                return HttpNotFound();
+
+            return View(customer);
+        }
+
+        private IEnumerable<Customer> GetCustomers()
+        {
+            return new List<Customer>
             {
-                new Customer { Id = 1, Name = "John Smith" },
-                new Customer { Id = 2, Name = "Mary Willians" }
+                new Customer { Id = 1, Name = "John Smith"},
+                new Customer { Id = 2, Name = "Mary Willians"}
             };
-
-            var customer = customers.Where(c => c.Id == id);
-
-            string name = "Teste";
-
-            return Content(name);
         }
     }
 }
